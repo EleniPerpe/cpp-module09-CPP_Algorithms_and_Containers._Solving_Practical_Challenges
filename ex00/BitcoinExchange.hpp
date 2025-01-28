@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:31:52 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 18:23:49 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/28 18:50:22 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class BitcoinExchange
 
     void MapingCSV();
     void checkingArg(const char* arg);
+    int validFormatCheck(std::string& data, std::string& date, double& number, const std::string& nextLine);
         
     public:
         BitcoinExchange();

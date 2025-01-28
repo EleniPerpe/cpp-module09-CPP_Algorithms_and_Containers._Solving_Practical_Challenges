@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:46:29 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 18:30:47 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/28 18:54:40 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,49 @@ void BitcoinExchange::MapingCSV()
 
 }
        
+int BitcoinExchange::validFormatCheck(std::string& data, std::string& date, double& number, const std::string& nextLine)
+{
+     if (nextLine.find('|') == std::string::npos)
+        {
+            std::cout << "Error: bad input => " << nextLine << std::endl;
+            return 0;
+        }
+        
+        date = nextLine.substr(0, nextLine.find(' '));
+        std::tm tm = {};
+        std::istringstream ss(date);
+        ss >> std::get_time(&tm, "%Y-%m-%d");
+
+        if (ss.fail())
+            return (std::cout << "Error: bad input => " << nextLine << std::endl, 0);
+
+        // if (tm.tm_year < 0 || tm.tm_year > 124 || tm.tm_mon < 0 || tm.tm_mon > 11 || 
+        //     tm.tm_mday < 1 || tm.tm_mday > 31)
+        //      return (std::cout << "Error: bad input => " << date << std::endl, 0);
+        
+        std::time_t t = std::mktime(&tm);
+        if (t == -1)
+            return (std::cout << "Error: bad input => " << nextLine << std::endl, 0);
+        
+        data = nextLine.substr(nextLine.find('|') + 1);
+        number = std::atof(data.c_str());
+        if (number < 0)
+            return (std::cout << "Error: not a positive number." << std::endl, 0);
+        if (number > std::numeric_limits<int>::max())
+            return (std::cout << "Error: too large a number." << std::endl, 0);
+        return 1;
+}
+       
 void BitcoinExchange::checkingArg(const char* arg)
 {
     std::ifstream file(arg, std::ifstream::in);
     if (!file.is_open())
-    {
         throw NoDataBaseFileException();
-    }
 
-    std::string nextLine;
+    std::string nextLine, data, date;
     int i = 0;
+    double number;
+    
     while (std::getline(file, nextLine))
     {
         if (i == 0)
@@ -67,52 +100,12 @@ void BitcoinExchange::checkingArg(const char* arg)
             } 
         }
 
-        if (nextLine.find('|') == std::string::npos)
+        int flag = validFormatCheck(data, date, number, nextLine);
+        if (flag == 1)
         {
-            std::cout << "Error: bad input => " << nextLine << std::endl;
-            continue;
+            std::cout << date << " : " << number << std::endl;
         }
-        
-        std::string date = nextLine.substr(0, nextLine.find(' '));
-        std::tm tm = {};
-        std::istringstream ss(date);
-        ss >> std::get_time(&tm, "%Y-%m-%d");
-
-        if (ss.fail())
-        {
-            std::cout << "Error: bad input => " << date << std::endl;
-            continue;
-        }
-        
-        if (tm.tm_year < 0 || tm.tm_year > 124 || tm.tm_mon < 0 || tm.tm_mon > 11 || 
-            tm.tm_mday < 1 || tm.tm_mday > 31)
-        {
-            std::cout << "Error: bad input => " << date << std::endl;
-            continue;
-        }
-        
-        std::time_t t = std::mktime(&tm);
-        if (t == -1)
-        {
-            std::cout << "Error: bad input => " << date << std::endl;
-            continue;
-        }
-        
-        std::string data = nextLine.substr(nextLine.find('|') + 1);
-        double number = std::atof(data.c_str());
-        if (number < 0)
-        {
-            std::cout << "Error: not a positive number." << std::endl;
-            continue;
-        }
-        if (number > std::numeric_limits<int>::max())
-        {
-            std::cout << "Error: too large a number." << std::endl;
-            continue;
-        }
-        std::cout << date << " : " << number << std::endl;
     }
-
 
     if (i == 0)
         throw EmptyDataBaseException();
