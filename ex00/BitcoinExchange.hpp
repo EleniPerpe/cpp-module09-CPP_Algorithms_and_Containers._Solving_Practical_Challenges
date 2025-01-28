@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:31:52 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 16:23:28 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/28 18:23:49 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <map>
 #include <string>
+#include <ctime>
+#include <limits>
 
 class BitcoinExchange
 {
     private:
-        std::multimap<std::string, float> _map;
+        std::multimap<std::string, double> _map;
 
     void MapingCSV();
+    void checkingArg(const char* arg);
         
     public:
         BitcoinExchange();
@@ -37,6 +41,11 @@ class BitcoinExchange
         };
 
         class EmptyDataBaseException : public std::exception
+        {
+            const char* what() const throw();
+        };
+
+        class WrongFormatException : public std::exception
         {
             const char* what() const throw();
         };

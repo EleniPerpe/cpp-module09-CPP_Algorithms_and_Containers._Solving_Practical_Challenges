@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:46:29 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 16:30:56 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/28 18:30:47 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,88 @@ void BitcoinExchange::MapingCSV()
     if (i == 0)
         throw EmptyDataBaseException();
 
-    for (const auto& pair : _map) {
-    std::cout << pair.first << " : " << pair.second << std::endl;
-}
+    // for (const auto& print : _map) 
+    // {
+    // std::cout << print.first << " : " << print.second << std::endl;
+    // }
 
+}
+       
+void BitcoinExchange::checkingArg(const char* arg)
+{
+    std::ifstream file(arg, std::ifstream::in);
+    if (!file.is_open())
+    {
+        throw NoDataBaseFileException();
+    }
+
+    std::string nextLine;
+    int i = 0;
+    while (std::getline(file, nextLine))
+    {
+        if (i == 0)
+        {
+            if (nextLine == "date | value")
+            {
+                i++;
+                continue;
+            }
+            else
+            {
+                std::cout << "Wrong first line format : <date | value>" << std::endl;
+                continue;
+            } 
+        }
+
+        if (nextLine.find('|') == std::string::npos)
+        {
+            std::cout << "Error: bad input => " << nextLine << std::endl;
+            continue;
+        }
+        
+        std::string date = nextLine.substr(0, nextLine.find(' '));
+        std::tm tm = {};
+        std::istringstream ss(date);
+        ss >> std::get_time(&tm, "%Y-%m-%d");
+
+        if (ss.fail())
+        {
+            std::cout << "Error: bad input => " << date << std::endl;
+            continue;
+        }
+        
+        if (tm.tm_year < 0 || tm.tm_year > 124 || tm.tm_mon < 0 || tm.tm_mon > 11 || 
+            tm.tm_mday < 1 || tm.tm_mday > 31)
+        {
+            std::cout << "Error: bad input => " << date << std::endl;
+            continue;
+        }
+        
+        std::time_t t = std::mktime(&tm);
+        if (t == -1)
+        {
+            std::cout << "Error: bad input => " << date << std::endl;
+            continue;
+        }
+        
+        std::string data = nextLine.substr(nextLine.find('|') + 1);
+        double number = std::atof(data.c_str());
+        if (number < 0)
+        {
+            std::cout << "Error: not a positive number." << std::endl;
+            continue;
+        }
+        if (number > std::numeric_limits<int>::max())
+        {
+            std::cout << "Error: too large a number." << std::endl;
+            continue;
+        }
+        std::cout << date << " : " << number << std::endl;
+    }
+
+
+    if (i == 0)
+        throw EmptyDataBaseException();
 }
 
 BitcoinExchange::BitcoinExchange() {}
@@ -58,6 +136,7 @@ BitcoinExchange::BitcoinExchange(const char* arg)
     try
     {
         MapingCSV();
+        checkingArg(arg);
     }
     catch(const std::exception& e)
     {
@@ -68,10 +147,15 @@ BitcoinExchange::BitcoinExchange(const char* arg)
 
 const char* BitcoinExchange::NoDataBaseFileException::what() const throw()
 {
-    return ("NoDataBaseFileException");
+    return ("Exception : Error on opening the file");
 } 
 
 const char* BitcoinExchange::EmptyDataBaseException::what() const throw()
 {
-    return ("EmptyDataBaseException");
+    return ("Exception : Empty file");
+}
+
+const char* BitcoinExchange::WrongFormatException::what() const throw()
+{
+    return ("Exception : Wrong format");
 } 
