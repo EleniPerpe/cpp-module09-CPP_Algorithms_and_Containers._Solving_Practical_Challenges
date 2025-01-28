@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:46:29 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 18:54:40 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/28 19:39:12 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,16 @@ int BitcoinExchange::validFormatCheck(std::string& data, std::string& date, doub
             return (std::cout << "Error: too large a number." << std::endl, 0);
         return 1;
 }
+
+void BitcoinExchange::searchMap(const std::string& date, double& number)
+{
+    for (std::map<std::string, double>::iterator it = this->_map.begin(); it != this->_map.end(); it++)
+    {
+        if (it->first == date)
+            std::cout << date << " => " << number  << " = " << it->second * number << std::endl;
+    }
+
+}
        
 void BitcoinExchange::checkingArg(const char* arg)
 {
@@ -88,23 +98,15 @@ void BitcoinExchange::checkingArg(const char* arg)
     {
         if (i == 0)
         {
-            if (nextLine == "date | value")
-            {
-                i++;
-                continue;
-            }
-            else
-            {
-                std::cout << "Wrong first line format : <date | value>" << std::endl;
-                continue;
-            } 
+            if (nextLine != "date | value")
+                throw WrongFormatException();
+            i++;
+            continue;
         }
 
         int flag = validFormatCheck(data, date, number, nextLine);
         if (flag == 1)
-        {
-            std::cout << date << " : " << number << std::endl;
-        }
+            searchMap(date, number);
     }
 
     if (i == 0)
@@ -136,7 +138,6 @@ BitcoinExchange::BitcoinExchange(const char* arg)
         std::cerr << e.what() << '\n';
     }
 }
-
 
 const char* BitcoinExchange::NoDataBaseFileException::what() const throw()
 {
