@@ -6,11 +6,11 @@
 #    By: eleni <eleni@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/19 15:07:19 by eperperi          #+#    #+#              #
-#    Updated: 2025/01/28 15:45:08 by eleni            ###   ########.fr        #
+#    Updated: 2025/01/29 14:46:27 by eleni            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	bitCoin
+NAME			=	btc
 
 CC				=	c++ -g -fsanitize=address
 

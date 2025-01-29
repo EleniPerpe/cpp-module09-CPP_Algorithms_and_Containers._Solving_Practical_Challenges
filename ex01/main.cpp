@@ -5,24 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/28 13:44:21 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/28 14:28:59 by eleni            ###   ########.fr       */
+/*   Created: 2025/01/29 14:49:20 by eleni             #+#    #+#             */
+/*   Updated: 2025/01/29 15:11:35 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <fstream>
+#include "RPN.hpp"
 
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
     if (argc != 2)
-        return (std::cout << "Wrong usage: ./btc <input.txt>" << std::endl, 0);
-    std::ifstream inputFile(argv[1]);
-    if (!inputFile.is_open())
-        return (std::cout << "Unable to open the file" << std::endl, 0);
-    // if (inputFile.peek() == std::ifstream::traits_type::eof())
-    //     return (std::cout << "The file is empty" << std::endl, 0);
-    if (inputFile.tellg() == 0)
-        return (std::cout << "The file is empty" << std::endl, 0);
-    BitcoinExchange exchange(argv[1]);
+    {
+        std::cout << "Usage : ./RPN <inverted Polish mathematical expression>" << std::endl;
+        return 1;
+    }
+    
+    std::string input = argv[1];
+    if (input.find_first_not_of("0123456789 +-*/") != std::string::npos)
+    {
+        std::cout << "The input accepts only digits and the operators : + - * /" << std::endl;
+        return 1;
+    }
+    
+    RPN expression(argv[1]);
 }
