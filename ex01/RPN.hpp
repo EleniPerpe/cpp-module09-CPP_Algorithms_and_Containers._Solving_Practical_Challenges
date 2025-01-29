@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 14:47:43 by eleni             #+#    #+#             */
-/*   Updated: 2025/01/29 15:13:44 by eleni            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:07:58 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 #include <iostream>
 #include <stack>
+#include <sstream>
 
 class RPN
 {
     private:
-        std::stack<float> _stack;
+        std::stack<int> _stack;
         
     public:
         RPN();
@@ -26,4 +27,14 @@ class RPN
         RPN(char* calc);
         RPN& operator=(const RPN& copy);
         ~RPN();
+
+        class InvalidInputException : public std::exception
+        {
+            const char* what() const throw();
+        };
+
+        class ZeroDivisionException : public std::exception
+        {
+            const char* what() const throw();            
+        };
 };
