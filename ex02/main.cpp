@@ -6,11 +6,11 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:14:50 by eleni             #+#    #+#             */
-/*   Updated: 2025/02/03 10:18:02 by eleni            ###   ########.fr       */
+/*   Updated: 2025/02/03 11:26:18 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
+#include "PmergeMe.hpp"
 
 int main(int argc, char** argv)
 {
@@ -25,4 +25,6 @@ int main(int argc, char** argv)
         std::cout << "Cannot sort only one number" << std::endl;
         return 1;
     }
+
+    PmergeMe list(argc, argv);
 }

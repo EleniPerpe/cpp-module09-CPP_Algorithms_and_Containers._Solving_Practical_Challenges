@@ -6,17 +6,17 @@
 #    By: eleni <eleni@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/19 15:07:19 by eperperi          #+#    #+#              #
-#    Updated: 2025/01/29 14:47:19 by eleni            ###   ########.fr        #
+#    Updated: 2025/02/03 11:29:11 by eleni            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	RPN
+NAME			=	PmergeMe
 
 CC				=	c++ -g -fsanitize=address
 
 CFLAGS			=	-Wall -Werror -Wextra -std=c++11
 
-SRC_FILES		=	main.cpp RPN.cpp
+SRC_FILES		=	main.cpp PmergeMe.cpp
 
 OBJ_DIR			=	./obj
 
