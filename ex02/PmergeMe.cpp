@@ -6,7 +6,7 @@
 /*   By: eleni <eleni@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 10:14:36 by eleni             #+#    #+#             */
-/*   Updated: 2025/02/04 15:41:25 by eleni            ###   ########.fr       */
+/*   Updated: 2025/02/04 16:32:54 by eleni            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ PmergeMe::PmergeMe(int argc, char** argv)
     std::list<int> mergeList;
     std::vector<int> mergeVector;
 
+    // auto startParsing = std::chrono::high_resolution_clock::now();
     for (int i = 1; i < argc; i++)
     {
         try
@@ -125,27 +126,34 @@ PmergeMe::PmergeMe(int argc, char** argv)
             throw NoIntegerException();
         }        
     }
+    // auto endParsing = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double, std::micro> parsingTime = endParsing - startParsing;
     std::cout << "Before: ";
     PmergePrintList(mergeVector);
     
-    clock_t startList = clock();
+
+    auto startList = std::chrono::high_resolution_clock::now();
     PmergeSortList(mergeList);
-    clock_t endList = clock();
-    double timeList = (double(endList - startList) / CLOCKS_PER_SEC) * 1e6;
+    auto endList = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::micro> timeList = endList - startList;
     
     std::cout << "After:  ";
     PmergePrintList(mergeList);
     
-    clock_t startVector = clock();
+    auto startVector = std::chrono::high_resolution_clock::now();
     PmergeSortVector(mergeVector);
-    clock_t endVector = clock();
-    double timeVector = (double(endVector - startVector) / CLOCKS_PER_SEC) * 1e6;
+    auto endVector = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::micro> timeVector = endVector - startVector;
     
     // std::cout << "After:  ";
     // PmergePrintList(mergeVector);
     
-    std::cout << "Time to process a range of " << argc - 1 << " elements with std::list :   " << timeList << " us" << std::endl;
-    std::cout << "Time to process a range of " << argc - 1 << " elements with std::vector : " << timeVector << " us" << std::endl;
+    // std::cout << "Time to process a range of " << argc - 1 << " elements with std::list :   " << parsingTime.count() + timeList.count() << " us" << std::endl;
+    // std::cout << "Time to process a range of " << argc - 1 << " elements with std::vector : " << parsingTime.count() + timeVector.count() << " us" << std::endl; 
+
+
+    std::cout << "Time to process a range of " << argc - 1 << " elements with std::list :   " << timeList.count() << " us" << std::endl;
+    std::cout << "Time to process a range of " << argc - 1 << " elements with std::vector : " << timeVector.count() << " us" << std::endl;
 }
 
 template <typename T>
